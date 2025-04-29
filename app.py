@@ -28,9 +28,7 @@ def get_session_id():
 def get_sale_order_line_incremental():
     try:
         offset = int(request.args.get("offset", 0))
-        limit = int(request.args.get("limit", 100))
-        date_from = "2025-04-27"  # 🔥 Fecha fija para traer solo registros nuevos
-
+        limit = int(request.args.get("limit", 500))
         session_id = get_session_id()
         headers = {"Content-Type": "application/json", "Cookie": f"session_id={session_id}"}
 
@@ -40,8 +38,13 @@ def get_sale_order_line_incremental():
             "params": {
                 "model": "sale.order.line",
                 "method": "search_read",
-                "args": [[["create_date", ">=", date_from]]],
+                "args": [[["create_date", ">=", "2025-04-28"]]],
                 "kwargs": {
+                    "fields": [
+                        "name", "price_unit", "price_subtotal", "price_total", "price_reduce",
+                        "price_reduce_taxinc", "discount", "product_uom_qty", "qty_to_invoice",
+                        "qty_invoiced", "id", "order_id", "invoice_status", "product_id", "order_partner_id"
+                    ],
                     "offset": offset,
                     "limit": limit
                 }
